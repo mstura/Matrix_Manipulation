@@ -1,14 +1,14 @@
-//(function() {
+(function(window) {
   'use strict';
   function matrix(size, weight){
     this.size = size;
     this.grid = [];
     this.weight = weight || 4;
-    this.entry = this.randomLocation();
-    this.exit = this.randomLocation();
+    this.entry = null;
+    this.exit = null;
     this.build();
-    this.defineIO();
-    this.write();
+    /*this.defineIO();
+    this.write();*/
   }
 
   matrix.prototype.build = function () {
@@ -67,9 +67,15 @@ matrix.prototype.testLocation = function (location) {
 };
 
 matrix.prototype.defineIO = function () {
+  this.entry = this.randomLocation();
+  this.exit = this.randomLocation();
+
   let e = this.entry;
   let t = this.exit;
   this.grid[e.y][e.x] = 'S';
   this.grid[t.y][t.x] = 'X';
 };
-//}());
+
+window = window || {};
+window.matrix = matrix;
+}(window));
