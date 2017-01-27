@@ -1,80 +1,89 @@
-(function(window) {
+(function(window){
   'use strict';
-  function matrix(size, weight){
-    this.size = size;
-    this.grid = [];
-    this.weight = weight || 4;
-    this.entry = null;
-    this.exit = null;
-    this.build();
-    /*this.defineIO();
-    this.write();*/
+class matrix {
+  constructor(size, weight, options = {useNodes: false, type: null}) {
+    this.size = size
+    this.grid = []
+    this.weight = weight || 4
+    this.options = {}
+    this.options.useNodes = options.useNodes || false
+    this.options.type = options.type || null
+    this.init(this.options)
+    this.write()
   }
-
-  matrix.prototype.build = function () {
-    for (var x = 0; x < this.size; x++) {
-      let row = this.grid[x] = [];
-
-        for (var y = 0; y < this.size; y++) {
-          let random = this.randomWeight();
-        row.push(random);
+  init(options) {
+    for (var y = 0; y < this.size; y++) {
+      let row = this.grid[y] = [];
+      for (var x = 0; x < this.size; x++) {
+        if (options.useNodes) {
+          if (options.type === 'aStar') {
+            row.push(new Nodes.aStar(x, y, this.randomWeight()));
+          } else if (options.type === 'simple') {
+            row.push(new Nodes.simple(x, y, this.randomWeight()));
+          }
+        } else {
+          row.push(this.randomWeight());
         }
       }
-  };
-
-  matrix.prototype.randomWeight = function () {
-    return Math.floor(Math.random() * this.weight);
-  };
-
-  matrix.prototype.generateWeight = function () {
-    let weight = this.randomWeight();
-    if (weight === 0) {
-      weight = null;
     }
-    return weight;
-  };
-
-matrix.prototype.write = function () {
-  let text = '';
-  for (var i = 0; i < this.size; i++) {
-    text += JSON.stringify(this.grid[i]) + '<br>';
   }
-  document.body.innerHTML = text;
-};
+  neighbors(node, diagonalCheck){
+    let neighbors = [];
 
-matrix.prototype.randomLocation = function () {
-  let randomPoint = {
-    x: Math.floor(Math.random() * this.size),
-    y: Math.floor(Math.random() * this.size)
-  };
-  if (this.testLocation(randomPoint)) {
-    return this.randomLocation();
-  } else {
-    return randomPoint;
-  }
-};
-
-matrix.prototype.testLocation = function (location) {
-  if (this.entry) {
-    if (location.x === this.entry.x && location.y === this.entry.y) {
-      return true;
-    } else {
-      return false;
+    //check up
+    if (this.grid[node.y - 1][node.x]) {
+      neighbors.push(this.grid[node.y - 1][node.x]);
     }
-  } else {
-    return false;
+    //check right
+    if (this.grid[node.y][node.x + 1]) {
+      neighbors.push(this.grid[node.y][node.x + 1]);
+    }
+    //check down
+    if (this.grid[node.y + 1][node.x]) {
+      neighbors.push(this.grid[node.y + 1][node.x]);
+    }
+    //check left
+    if (this.grid[node.y][node.x - 1]) {
+      neighbors.push(this.grid[node.y][node.x - 1]);
+    }
+
+    if (diagonalCheck) {
+      //check top-right
+      if (this.grid[node.y - 1][node.x + 1]) {
+        neighbors.push(this.grid[node.y - 1][node.x + 1]);
+      }
+      //check bottom-right
+      if (this.grid[node.y + 1][node.x + 1]) {
+        neighbors.push(this.grid[node.y + 1][node.x + 1]);
+      }
+      //check bottom-left
+      if (this.grid[node.y + 1][node.x - 1]) {
+        neighbors.push(this.grid[node.y + 1][node.x - 1]);
+      }
+      //check top-left
+      if (this.grid[node.y - 1][node.x - 1]) {
+        neighbors.push(this.grid[node.y - 1][node.x - 1]);
+      }
+    }
+    return neighbors;
   }
-};
-
-matrix.prototype.defineIO = function () {
-  this.entry = this.randomLocation();
-  this.exit = this.randomLocation();
-
-  let e = this.entry;
-  let t = this.exit;
-  this.grid[e.y][e.x] = 'S';
-  this.grid[t.y][t.x] = 'X';
-};
+  randomWeight(){
+    return Math.floor(Math.random() * this.weight)
+  }
+  randomLocation(){
+    return {
+      x: Math.floor(Math.random() * this.size),
+      y: Math.floor(Math.random() * this.size)
+    }
+  }
+  write(){
+    let text = '';
+    for (var i = 0; i < this.size; i++) {
+      text += JSON.stringify(this.grid[i]) + '<br>';
+    }
+    document.body.innerHTML = text;
+  }
+}
 
 window = window || {};
 window.matrix = matrix;
