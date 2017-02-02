@@ -6,6 +6,12 @@ class node {
     this.x = x
     this.y = y
     this.weight = weight
+    this.f = 0
+    this.g = 0
+    this.h = 0
+    this.visited = false
+    this.closed = false
+    this.parent = null
   }
   position(){
     return {
@@ -21,27 +27,20 @@ class node {
   isWall (){
     return this.weight === 0
   }
+  reset(){
+    this.f = this.g = this.h = 0
+    this.visited = this.closed = false
+    this.parent = null
+  }
+  mark(node, heuristicValue, gScore){
+    this.visited = true
+    this.parent = node
+    this.h = heuristicValue
+    this.g = gScore
+    this.f = this.g + this.h
+  }
 }
 
-class aStarNode extends node {
-  constructor(x, y, weight) {
-    super(x, y, weight)
-    this.f = 0
-    this.g = 0
-    this.h = 0
-    this.visited = false
-    this.closed = false
-    this.parent = null
-  }
-  reset(){
-    this.f = 0
-    this.g = 0
-    this.h = 0
-    this.visited = false
-    this.closed = false
-    this.parent = null
-  }
-}
 /*
   function node (x, y, weight){
     this.x = x
@@ -67,7 +66,6 @@ class aStarNode extends node {
     return this.weight === 0;
   };
 */
-  window.Nodes = window.Nodes || {};
-  Nodes.simple = node;
-  Nodes.aStar = aStarNode;
+  window = window || {};
+  window.node = node;
 }(window));
