@@ -41,31 +41,6 @@ class node {
   }
 }
 
-/*
-  function node (x, y, weight){
-    this.x = x
-    this.y = y
-    this.weight = weight
-  }
-
-  node.prototype.position = function () {
-    return {
-      x: this.x,
-      y: this.y};
-  };
-
-  node.prototype.getCost = function (fromNeighbor) {
-    // Check Diagonal movement if allowed
-    if (fromNeighbor && fromNeighbor.x !== this.x && fromNeighbor.y !== this.y) {
-      return this.weight * 1.41421;
-    }
-    return this.weight;
-  };
-
-  node.prototype.isWall = function () {
-    return this.weight === 0;
-  };
-*/
   window = window || {};
   window.node = node;
 }(window));

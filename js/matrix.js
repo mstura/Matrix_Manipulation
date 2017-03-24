@@ -11,9 +11,9 @@ class matrix {
     this.write()
   }
   init() {
-    for (var y = 0; y < this.size; y++) {
+    for (let y = 0; y < this.size; y++) {
       let row = this.grid[y] = [];
-      for (var x = 0; x < this.size; x++) {
+      for (let x = 0; x < this.size; x++) {
         if (this.node) {
             row.push(new node(x, y, this.randomWeight()));
         } else {
@@ -75,7 +75,8 @@ class matrix {
     this.searchedNodes.push(node)
   }
   resetNodes(){
-    for (let i = 0; i < this.searchedNodes.length; i++) {
+    let snl = this.searchedNodes.length
+    for (let i = 0; i < snl; i++) {
       this.searchedNodes[i].reset()
     }
     this.searchedNodes = []
@@ -83,7 +84,7 @@ class matrix {
   // for testing doesn't belong here!
   write(){
     let text = '';
-    for (var i = 0; i < this.size; i++) {
+    for (let i = 0; i < this.size; i++) {
       text += JSON.stringify(this.grid[i]) + '<br>';
     }
     document.body.innerHTML = text;
